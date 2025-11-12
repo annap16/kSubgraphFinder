@@ -6,6 +6,11 @@ class MultiEdge;
 
 class Graph
 {
+private:
+    // adjacency[u] - map of (v -> multiplicity), where (u,v) is an edge
+    std::map<int, std::map<int, int>> adjacency;
+    int vertexCount = 0;
+
 public:
     Graph() {};
     ~Graph() {};
