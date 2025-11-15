@@ -12,13 +12,13 @@
 
 int verticesNeededForCopies(int numCopies, int subgraphSize, int graphSize)
 {
-    long double logCurrentCombination = std::log(subgraphSize + 1);
+    long double logCurrentCombination = std::log(subgraphSize + 1) + std::log(1);
     long double logNumCopies = std::log(numCopies);
     int additionalVertices = 2;
 
     while (logCurrentCombination < logNumCopies)
     {
-        logCurrentCombination += std::log(subgraphSize + additionalVertices);
+        logCurrentCombination += std::log(subgraphSize + additionalVertices) + std::log(additionalVertices);
         additionalVertices++;
     }
 
