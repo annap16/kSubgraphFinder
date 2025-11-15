@@ -10,12 +10,18 @@ void Graph::addEdge(int u, int v, int multiplicity)
     adjacency[u][v] += multiplicity;
 }
 
-std::map<int, int> Graph::getEdgesWithMultiplicity(int u)
+std::vector<Edge> Graph::getEdges(int u)
 {
     if (adjacency.find(u) == adjacency.end())
         return {}; // this means u doesn't exist
 
-    return adjacency[u];
+    std::vector<Edge> edges;
+    for (std::pair<int,int> &keyval: adjacency[u])
+    {
+        edges.push_back(Edge{u, keyval.first, keyval.second});
+    }
+
+    return edges;
 }
 
 int Graph::edgeCount(int u, int v)
