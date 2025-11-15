@@ -4,17 +4,13 @@ class Graph;
 
 class GraphMappingIterator
 {
-    Graph *H;
-    Graph *S;
+    Graph &H;
+    std::vector<int> &verticesSubset;
 
 public:
-    GraphMappingIterator() {};
-    GraphMappingIterator(Graph *H, Graph *S)
-    {
-        this->H = H;
-        this->S = S;
-    }
+    GraphMappingIterator(Graph &H, std::vector<int> &verticesSubset)
+        : H(H), verticesSubset(verticesSubset) {}
+
     ~GraphMappingIterator() {};
-    bool hasNext() {};
-    int *next() {};
+    std::optional<std::vector<int>> next() {};
 };

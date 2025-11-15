@@ -1,18 +1,19 @@
 #pragma once
+#include <vector>
+#include <optional>
 
-class Graph;
+#include "graph.h"
 
 class GraphGenerator
 {
-    Graph *G;
+    Graph G;
+    int k;
 
 public:
-    GraphGenerator() {};
-    GraphGenerator(Graph *G)
-    {
-        this->G = G;
-    }
-    ~GraphGenerator() {};
-    Graph *next() {};
-    GraphGenerator *createNew(Graph *S) {};
+    GraphGenerator(Graph G, int k) : G(G), k(k) {}
+    ~GraphGenerator() = default;
+
+    std::optional<std::vector<int>> next() {}
+
+    GraphGenerator copy() {}
 };

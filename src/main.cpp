@@ -5,6 +5,7 @@
 #include "../headers/utils.h"
 
 Graph *RESULT = nullptr;
+int cost = -1;
 
 int main()
 {
@@ -12,19 +13,9 @@ int main()
     Graph *G = new Graph();
     Graph *H = new Graph();
     int numCopies = 2;
-    int subgraphSize = H->size();
-    int graphSize = G->size();
     RESULT = new Graph();
 
-    GraphGenerator *GG = new GraphGenerator(G);
-
-    int additionalVerticies = verticesNeededForCopies(numCopies, subgraphSize, graphSize);
-    if (additionalVerticies != 0)
-    {
-        G->addIsolatedVertices(additionalVerticies);
-    }
-
-    findCopy(numCopies, G, H, GG, 0, INT32_MAX);
+    findCopies(*G, *H, numCopies);
 
     // TODO: Save/Display RESULT and clean memory
     delete RESULT;

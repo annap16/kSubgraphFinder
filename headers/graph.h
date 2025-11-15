@@ -1,6 +1,8 @@
 #pragma once
 
-#include <map>
+#include <vector>
+
+class MultiEdge;
 
 class Graph
 {
@@ -9,10 +11,10 @@ public:
     ~Graph() {};
 
     void addEdge(int u, int v, int multiplicity) {};
-    std::map<int, int> getEdgesWithMultiplicity(int u) {};
+    std::vector<MultiEdge> getEdges(int u) {};
     int edgeCount(int u, int v) {};
     int size() {};
     Graph copy() {};
-    Graph *createNew() {};
     void addIsolatedVertices(int count) {};
+    void deleteEdges(std::vector<MultiEdge>){};
 };
