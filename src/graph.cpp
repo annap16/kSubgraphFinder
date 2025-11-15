@@ -10,7 +10,7 @@ void Graph::addEdge(int u, int v, int multiplicity)
     adjacency[u][v] += multiplicity;
 }
 
-std::vector<Edge> Graph::getEdges(int u)
+std::vector<Edge> Graph::getMultiEdges(int u)
 {
     if (adjacency.find(u) == adjacency.end())
         return {}; // this means u doesn't exist
