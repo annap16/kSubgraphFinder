@@ -3,24 +3,20 @@
 #include "../headers/graphGenerator.h"
 #include "../headers/graph.h"
 #include "../headers/utils.h"
-
-Graph *RESULT = nullptr;
-int cost = -1;
+#include "../headers/graphAugmentationResult.h"
 
 int main()
 {
     // TODO: Parse input and get graph G, H and k from the input file
-    Graph *G = new Graph();
-    Graph *H = new Graph();
+    Graph G, H;
     int numCopies = 2;
-    RESULT = new Graph();
 
-    findCopies(*G, *H, numCopies);
+    GraphAugmentationResult result;
+    GraphGenerator GG(G, H.size());
+
+    findCopy(numCopies, G, H, GG, 0, INT32_MAX, result);
 
     // TODO: Save/Display RESULT and clean memory
-    delete RESULT;
-    delete G;
-    delete H;
 
     return 0;
 }

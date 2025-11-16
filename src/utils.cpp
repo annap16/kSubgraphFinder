@@ -3,6 +3,8 @@
 #include "../headers/graphGenerator.h"
 #include "../headers/graphMappingIterator.h"
 #include "../headers/multiEdge.h"
+#include "../headers/graphAugmentationResult.h"
+#include "../headers/foundCopy.h"
 
 #include <cmath>
 #include <map>
@@ -10,29 +12,13 @@
 #include <optional>
 #include <vector>
 
-int verticesNeededForCopies(int numCopies, int subgraphSize, int graphSize)
-{
-    long double logCurrentCombination = std::log(subgraphSize + 1) - std::log(1);
-    long double logNumCopies = std::log(numCopies);
-    int additionalVertices = 2;
-
-    while (logCurrentCombination < logNumCopies)
-    {
-        logCurrentCombination += std::log(subgraphSize + additionalVertices) - std::log(additionalVertices);
-        additionalVertices++;
-    }
-
-    if (additionalVertices + subgraphSize < graphSize)
-        return 0;
-    return additionalVertices + subgraphSize - graphSize;
-}
-
-void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int currentCost, int minCost)
+void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int currentCost, int minCost, GraphAugmentationResult &result, std::vector<FoundCopy> currentCopies)
 {
     if (numCopies == 0)
     {
-        *RESULT = G.copy();
-        cost = currentCost;
+        result.graphAugmentation = G.copy();
+        result.cost = currentCost;
+        result.foundCopies = currentCopies;
         return;
     }
 
@@ -47,20 +33,26 @@ void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int current
         {
             GraphGenerator copyGG = GG.copy();
 
-            std::vector<MultiEdge> addedEdges = addMissingEdgesAndCalculateCost(G, H, *verticesMapping, currentCost, minCost);
+            auto [addedEdges, addedEdgesCost] = addMissingEdgesAndCalculateCost(G, H, *verticesMapping, currentCost, minCost);
+            currentCost += addedEdgesCost;
+
             if (currentCost < minCost)
             {
-                findCopy(numCopies - 1, G, H, copyGG, currentCost, minCost);
+                currentCopies.push_back(FoundCopy(*verticesSubset, *verticesMapping, addedEdgesCost));
+                findCopy(numCopies - 1, G, H, copyGG, currentCost, minCost, result, currentCopies);
+                currentCopies.pop_back();
             }
 
             G.deleteEdges(addedEdges);
+            currentCost -= addedEdgesCost;
         }
     }
 }
 
-std::vector<MultiEdge> addMissingEdgesAndCalculateCost(Graph &G, Graph &H, const std::vector<int> &vertexMapping, int &currentCost, int minCost)
+std::tuple<std::vector<MultiEdge>, int> addMissingEdgesAndCalculateCost(Graph &G, Graph &H, const std::vector<int> &vertexMapping, int currentCost, int minCost)
 {
     int numVertices = H.size();
+    int addedEdgesCost = 0;
 
     std::vector<MultiEdge> addedEdges;
 
@@ -81,28 +73,14 @@ std::vector<MultiEdge> addMissingEdgesAndCalculateCost(Graph &G, Graph &H, const
 
             if (currentCost + edgesToAdd >= minCost)
             {
-                currentCost = minCost;
-                return addedEdges;
+                return std::make_tuple(addedEdges, addedEdgesCost);
             }
 
             G.addEdge(mappedFrom, mappedTo, edgesToAdd);
             addedEdges.push_back(MultiEdge(mappedFrom, mappedTo, edgesToAdd));
-            currentCost += edgesToAdd;
+            addedEdgesCost += edgesToAdd;
         }
     }
 
-    return addedEdges;
-}
-
-void findCopies(Graph &G, Graph &H, int numCopies)
-{
-    int additionalVerticies = verticesNeededForCopies(numCopies, H.size(), G.size());
-    if (additionalVerticies != 0)
-    {
-        G.addIsolatedVertices(additionalVerticies);
-    }
-
-    GraphGenerator GG(G, H.size());
-
-    findCopy(numCopies, G, H, GG, 0, INT32_MAX);
+    return std::make_tuple(addedEdges, addedEdgesCost);
 }
