@@ -54,7 +54,6 @@ void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int current
             }
 
             G.deleteEdges(addedEdges);
-            ;
         }
     }
 }
