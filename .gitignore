@@ -1,0 +1,24 @@
+# === Build artifacts ===
+main
+*.o
+*.obj
+*.exe
+*.out
+
+# === Build directories ===
+build/
+bin/
+dist/
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === Editor/IDE files ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === OS temp files ===
+*~
