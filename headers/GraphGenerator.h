@@ -4,20 +4,20 @@
 #include "Graph.h"
 #include <vector>
 #include <optional>
-#include <cstdint>
 
 class GraphGenerator {
 private:
     Graph& G;
     int k;
-    uint64_t current;
     bool finished;
 
-    static uint64_t next_combination(uint64_t x);
+    std::vector<int> comb;
+
+    bool next_combination(std::vector<int>& c, int n, int k);
 
 public:
     GraphGenerator(Graph& graph, int k = -1);
     std::optional<std::vector<int>> next();
 };
 
-#endif 
+#endif

@@ -1,37 +1,89 @@
 #include "GraphGenerator.h"
 
+// Source: https://cp-algorithms.com/combinatorics/generating_combinations.html
+// Lexicographic generation of k-combinations out of n elements.
+
+/**
+ * @brief Constructs a GraphGenerator that iterates over all k-subsets of vertices.
+ *
+ * If k == -1, then k defaults to the size of the graph (i.e. one combination of all vertices).
+ * If k is invalid (k <= 0 or k > n), the generator is marked as finished immediately.
+ *
+ * @param graph Reference to the graph whose vertex indices will be used.
+ * @param k     Size of the subsets to generate (optional, default: -1).
+ */
 GraphGenerator::GraphGenerator(Graph& graph, int k)
     : G(graph), k(k == -1 ? graph.size() : k), finished(false)
 {
-    if (this->k > G.size() || this->k <= 0)
+    int n = G.size();
+
+    // Validate k
+    if (this->k > n || this->k <= 0) {
         finished = true;
-    else
-        current = (1ULL << this->k) - 1;
+        return;
+    }
+
+    // First combination in lexicographic order: [0, 1, 2, ..., k-1]
+    comb.resize(this->k);
+    for (int i = 0; i < this->k; ++i)
+        comb[i] = i;
 }
 
-//Gosper’s algorithm (O(1)) - https://read.seas.harvard.edu/~kohler/class/cs207-s12/lec12.html
-uint64_t GraphGenerator::next_combination(uint64_t x) {
-    uint64_t y = x & -x;
-    uint64_t c = x + y;
-    return (((x ^ c) >> 2) / y) | c;
+/**
+ * @brief Computes the next k-combination in lexicographic order.
+ *
+ * This follows the classical "successor combination" algorithm:
+ * - Find the rightmost position i such that c[i] can be increased without violating lexicographic rules.
+ * - Increase c[i].
+ * - Set all positions to the right of i to the minimal valid values.
+ *
+ * Complexity: O(k)
+ *
+ * @param c Vector storing the current combination.
+ * @param n Number of available elements (0..n-1).
+ * @param k Size of each combination.
+ * @return true if the next combination exists, false if this was the last one.
+ */
+bool GraphGenerator::next_combination(std::vector<int>& c, int n, int k)
+{
+    for (int i = k - 1; i >= 0; --i) {
+        // Can we increment c[i] while leaving room for the remaining elements?
+        if (c[i] < n - (k - i)) {
+            c[i]++;
+
+            // Fill the remaining positions with the next sequential numbers
+            for (int j = i + 1; j < k; ++j)
+                c[j] = c[j - 1] + 1;
+
+            return true;
+        }
+    }
+
+    // No further combination exists
+    return false;
 }
 
-//generating vec of numbers from mask (O(n)) - not sure if we prefer to convert it here or returning the mask and using it in the main prog
-// but probably converting here is easier to understand
-std::optional<std::vector<int>> GraphGenerator::next() {
+/**
+ * @brief Returns the next k-subset of vertex indices.
+ *
+ * The returned subset is a lexicographically ordered vector of indices.
+ * When all combinations are exhausted, the function returns std::nullopt.
+ *
+ * @return std::optional<std::vector<int>>
+ *         - The next subset of size k
+ *         - std::nullopt if no more combinations exist
+ */
+std::optional<std::vector<int>> GraphGenerator::next()
+{
     if (finished)
         return std::nullopt;
 
-    std::vector<int> subset;
-    for (int i = 0; i < G.size(); ++i)
-        if (current & (1ULL << i))
-            subset.push_back(i);
+    // Return a copy of the current combination
+    std::vector<int> subset = comb;
 
-    uint64_t next_mask = next_combination(current);
-    if (next_mask >= (1ULL << G.size()) || next_mask == 0)
+    // Move to the next combination
+    if (!next_combination(comb, G.size(), k))
         finished = true;
-    else
-        current = next_mask;
 
     return subset;
 }
