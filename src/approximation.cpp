@@ -10,7 +10,7 @@ std::tuple<int, std::vector<std::vector<int>>> findCopiesApproximation(Graph &G,
     {
         // find a connected subgraph of G with high degrees by removing vertices with lowest
         // degrees that are not cutting vertices
-        std::vector<int> denseSubgraph = findDenseSubgraph(G2);
+        std::vector<int> denseSubgraph = findDenseSubgraph(G2, H.size());
 
         // greedy find a match using greedy approach and score
         // (eg. -2 point for every edge missing and + is_in_dense_subraph * (number of unmatched vertices) / 3)
