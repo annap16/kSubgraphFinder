@@ -1,4 +1,4 @@
-#include "headers/approximation .h"
+#include "headers/approximation.h"
 
 std::tuple<int, std::vector<std::vector<int>>> findCopiesApproximation(Graph &G, Graph &H, int numCopies)
 {
