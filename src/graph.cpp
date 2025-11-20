@@ -61,3 +61,25 @@ void Graph::addIsolatedVertices(int count)
     }
     vertexCount += count;
 }
+
+void deleteEdges(std::vector<MultiEdge> edges) {
+    for (const auto& edge : edges) {
+        int u = edge.from;
+        int v = edge.to;
+        int m = edge.multiplicity;
+        auto u_it = adjacency.find(u);
+        if (u_it != adjacency.end()) {
+            auto& v_map = u_it->second;
+            auto v_it = v_map.find(v);
+            if (v_it != v_map.end()) {
+                v_it->second -= m;
+                if (v_it->second <= 0) {
+                    v_map.erase(v_it);
+                }
+            }
+            if (v_map.empty()) {
+                adjacency.erase(u_it);
+            }
+        }
+    }
+}
