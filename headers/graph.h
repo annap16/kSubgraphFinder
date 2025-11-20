@@ -16,11 +16,12 @@ public:
     Graph() {};
     ~Graph() {};
 
-    void addEdge(int u, int v, int multiplicity) {};
-    std::vector<MultiEdge> getEdges(int u) {};
-    int edgeCount(int u, int v) {};
-    int size() {};
-    Graph copy() {};
-    void addIsolatedVertices(int count) {};
+    void addEdge(int u, int v, int multiplicity);
+    std::vector<MultiEdge> getMultiEdges(int u) const;
+    int edgeCount(int u, int v) const;
+    int size() const;
+    Graph copy();
+    void addIsolatedVertices(int count);
     void deleteEdges(std::vector<MultiEdge>){};
+
 };
