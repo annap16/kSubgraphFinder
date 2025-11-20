@@ -6,7 +6,9 @@
 
 void Graph::addEdge(int u, int v, int multiplicity)
 {
-    // should we add error handling for non-existing u,v?
+    if (u >= vertexCount || v >= vertexCount)
+        return;
+
     adjacency[u][v] += multiplicity;
 }
 
@@ -16,7 +18,7 @@ std::vector<Edge> Graph::getMultiEdges(int u)
         return {}; // this means u doesn't exist
 
     std::vector<Edge> edges;
-    for (std::pair<int,int> &keyval: adjacency[u])
+    for (const std::pair<int,int> &keyval: adjacency[u])
     {
         edges.push_back(Edge{u, keyval.first, keyval.second});
     }
