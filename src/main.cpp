@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     ParsedData data = parseInputFile(argv[1]);
     if (!data.G || !data.H)
     {
-        std::cerr << "Failed to load input data.\n";;
+        std::cerr << "Failed to load input data.\n";
         return 1;
     }
 
