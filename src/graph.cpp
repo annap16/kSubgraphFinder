@@ -12,15 +12,15 @@ void Graph::addEdge(int u, int v, int multiplicity)
     adjacency[u][v] += multiplicity;
 }
 
-std::vector<Edge> Graph::getMultiEdges(int u)
+std::vector<MultiEdge> Graph::getMultiEdges(int u)
 {
     if (adjacency.find(u) == adjacency.end())
         return {}; // this means u doesn't exist
 
-    std::vector<Edge> edges;
-    for (const std::pair<int,int> &keyval: adjacency[u])
+    std::vector<MultiEdge> edges;
+    for (std::pair<int,int> &keyval: adjacency[u])
     {
-        edges.push_back(Edge{u, keyval.first, keyval.second});
+        edges.push_back(MultiEdge{u, keyval.first, keyval.second});
     }
 
     return edges;
