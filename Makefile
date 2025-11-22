@@ -1,7 +1,12 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Iheaders
 
-SRC = src/main.cpp src/utils.cpp
+SRC = src/main.cpp \
+	src/utils.cpp \
+	src/graph.cpp \
+    src/GraphGenerator.cpp \
+    src/inputParser.cpp
+
 OUT = main
 
 all:

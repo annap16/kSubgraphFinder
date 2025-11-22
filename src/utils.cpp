@@ -67,7 +67,7 @@ std::vector<MultiEdge> addMissingEdgesAndCalculateCost(Graph &G, Graph &H, const
 
     for (int i = 0; i < numVertices; i++)
     {
-        std::vector<MultiEdge> patternEdges = H.getEdges(i);
+        std::vector<MultiEdge> patternEdges = H.getMultiEdges(i);
 
         for (MultiEdge &edge : patternEdges)
         {
