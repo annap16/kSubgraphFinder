@@ -29,7 +29,7 @@ int verticesNeededForCopies(int numCopies, int subgraphSize, int graphSize)
 
 void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int currentCost, int minCost)
 {
-    if (numCopies == 0) // base-case: found a valid copy
+    if (numCopies == 0)
     {
         *RESULT = G.copy();
         cost = currentCost;
