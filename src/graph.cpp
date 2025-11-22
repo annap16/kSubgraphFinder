@@ -12,13 +12,14 @@ void Graph::addEdge(int u, int v, int multiplicity)
     adjacency[u][v] += multiplicity;
 }
 
-std::vector<MultiEdge> Graph::getMultiEdges(int u)
+std::vector<MultiEdge> Graph::getMultiEdges(int u) const
 {
-    if (adjacency.find(u) == adjacency.end())
+    auto it = adjacency.find(u);
+    if (it == adjacency.end())
         return {}; // this means u doesn't exist
 
     std::vector<MultiEdge> edges;
-    for (std::pair<int,int> &keyval: adjacency[u])
+    for (const auto &keyval : it->second)
     {
         edges.push_back(MultiEdge{u, keyval.first, keyval.second});
     }
@@ -26,7 +27,7 @@ std::vector<MultiEdge> Graph::getMultiEdges(int u)
     return edges;
 }
 
-int Graph::edgeCount(int u, int v)
+int Graph::edgeCount(int u, int v) const
 {
     auto itU = adjacency.find(u);
     if (itU == adjacency.end())
@@ -39,7 +40,7 @@ int Graph::edgeCount(int u, int v)
     return itV->second;
 }
 
-int Graph::size()
+int Graph::size() const
 {
     return vertexCount;
 }
@@ -62,7 +63,7 @@ void Graph::addIsolatedVertices(int count)
     vertexCount += count;
 }
 
-void deleteEdges(std::vector<MultiEdge> edges) {
+void Graph::deleteEdges(std::vector<MultiEdge>& edges) {
     for (const auto& edge : edges) {
         int u = edge.from;
         int v = edge.to;

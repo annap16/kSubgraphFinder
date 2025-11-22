@@ -22,5 +22,5 @@ public:
     int size() const;
     Graph copy();
     void addIsolatedVertices(int count);
-    void deleteEdges(std::vector<MultiEdge>){};
+    void deleteEdges(std::vector<MultiEdge> & edges);
 };
