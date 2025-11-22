@@ -26,8 +26,6 @@ int main(int argc, char **argv)
     Graph *G = data.G;
     Graph *H = data.H;
     int numCopies = data.numCopies;
-    int subgraphSize = H->size(); // these names are descriptive but G and H aren't
-    int graphSize = G->size();
     RESULT = new Graph();
 
     findCopies(*G, *H, numCopies);
