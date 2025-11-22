@@ -1,4 +1,4 @@
-#include "GraphGenerator.h"
+#include "graphGenerator.h"
 
 // Source: https://cp-algorithms.com/combinatorics/generating_combinations.html
 // Lexicographic generation of k-combinations out of n elements.
@@ -12,13 +12,14 @@
  * @param graph Reference to the graph whose vertex indices will be used.
  * @param k     Size of the subsets to generate (optional, default: -1).
  */
-GraphGenerator::GraphGenerator(Graph& graph, int k)
+GraphGenerator::GraphGenerator(Graph &graph, int k)
     : G(graph), k(k == -1 ? graph.size() : k), finished(false)
 {
     int n = G.size();
 
     // Validate k
-    if (this->k > n || this->k <= 0) {
+    if (this->k > n || this->k <= 0)
+    {
         finished = true;
         return;
     }
@@ -44,11 +45,13 @@ GraphGenerator::GraphGenerator(Graph& graph, int k)
  * @param k Size of each combination.
  * @return true if the next combination exists, false if this was the last one.
  */
-bool GraphGenerator::next_combination(std::vector<int>& c, int n, int k)
+bool GraphGenerator::next_combination(std::vector<int> &c, int n, int k)
 {
-    for (int i = k - 1; i >= 0; --i) {
+    for (int i = k - 1; i >= 0; --i)
+    {
         // Can we increment c[i] while leaving room for the remaining elements?
-        if (c[i] < n - (k - i)) {
+        if (c[i] < n - (k - i))
+        {
             c[i]++;
 
             // Fill the remaining positions with the next sequential numbers
