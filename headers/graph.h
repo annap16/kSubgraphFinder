@@ -4,7 +4,6 @@
 #include <vector>
 #include "multiEdge.h"
 
-
 class Graph
 {
 private:
@@ -22,5 +21,5 @@ public:
     int size() const;
     Graph copy();
     void addIsolatedVertices(int count);
-    void deleteEdges(std::vector<MultiEdge> & edges);
+    void deleteEdges(std::vector<MultiEdge> &edges);
 };

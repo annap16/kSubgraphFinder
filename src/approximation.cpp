@@ -1,10 +1,12 @@
 #include "headers/approximation.h"
 
-std::tuple<int, std::vector<std::vector<int>>> findCopiesApproximation(Graph &G, Graph &H, int numCopies)
+GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopies)
 {
+    GraphAugmentationResult result{
+        .cost = 0,
+        .foundCopies = {}};
     Graph G2 = G.copy();
     int cost = 0;
-    std::vector<std::vector<int>> result(numCopies);
 
     for (int i = 0; i < numCopies; i++)
     {
@@ -19,14 +21,16 @@ std::tuple<int, std::vector<std::vector<int>>> findCopiesApproximation(Graph &G,
         for (auto &e : edges_to_add)
         {
             G2.addEdge(e.from, e.to, e.multiplicity);
-            cost += e.multiplicity;
+            result.cost += e.multiplicity;
         }
 
         // opcjonalne pełzanie tu
-        result[i] = match;
+        result.foundCopies.push_back(FoundCopy(denseSubgraph, match, edges_to_add.size()));
 
         pickAndRemoveVertex(G2, match);
     }
 
-    return {cost, result};
+    result.graphAugmentation = G2;
+
+    return result;
 }

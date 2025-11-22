@@ -2,6 +2,7 @@
 
 #include "graph.h"
 #include "multiEdge.h"
+#include "graphAugmentationResult.h"
 #include <vector>
 #include <tuple>
 
