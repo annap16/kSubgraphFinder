@@ -3,6 +3,7 @@
 #include "../headers/graphGenerator.h"
 #include "../headers/graph.h"
 #include "../headers/utils.h"
+#include "../headers/graphAugmentationResult.h"
 #include "../headers/inputParser.h"
 
 Graph *RESULT = nullptr;
@@ -28,12 +29,12 @@ int main(int argc, char **argv)
     int numCopies = data.numCopies;
     RESULT = new Graph();
 
-    findCopies(*G, *H, numCopies);
+    GraphAugmentationResult result;
+    GraphGenerator GG(G, H.size());
+
+    findCopy(numCopies, G, H, GG, 0, INT32_MAX, result);
 
     // TODO: Save/Display RESULT and clean memory
-    delete RESULT;
-    delete G;
-    delete H;
 
     return 0;
 }
