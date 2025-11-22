@@ -7,7 +7,7 @@ static Graph *readGraphFromStream(std::istream &in)
     int n;
     if (!(in >> n))
     {
-        std::cerr << "[Błąd] Nie można odczytać liczby wierzchołków.\n";
+        std::cerr << "[Error] Unable to read the number of vertices.\\n";
         return nullptr;
     }
 
@@ -21,7 +21,7 @@ static Graph *readGraphFromStream(std::istream &in)
             int multiplicity;
             if (!(in >> multiplicity))
             {
-                std::cerr << "[Błąd] Niepoprawna macierz sąsiedztwa.\n";
+                std::cerr << "[Error] Invalid adjacency matrix.\n";
                 delete g;
                 return nullptr;
             }
@@ -39,7 +39,7 @@ ParsedData parseInputFile(const std::string &filename)
     std::ifstream in(filename);
     if (!in.is_open())
     {
-        std::cerr << "[Błąd] Nie można otworzyć pliku: " << filename << "\n";
+        std::cerr << "[Błąd] Unable to open file: " << filename << "\n";
         return {nullptr, nullptr, 0};
     }
 
@@ -58,7 +58,7 @@ ParsedData parseInputFile(const std::string &filename)
 
     if (!(in >> data.numCopies))
     {
-        std::cerr << "[Ostrzeżenie] Brak wartości numCopies — przyjęto 1.\n";
+        std::cerr << "[Warning] Missing numCopies value — defaulting to 1.\n";
         data.numCopies = 1;
     }
 
