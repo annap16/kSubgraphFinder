@@ -22,3 +22,15 @@ Thumbs.db
 
 # === OS temp files ===
 *~
+
+# === CMake files ===
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+CMakeLists.txt
+
+
+data.txt
+
