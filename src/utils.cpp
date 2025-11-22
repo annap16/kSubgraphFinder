@@ -58,7 +58,7 @@ std::tuple<std::vector<MultiEdge>, int> addMissingEdgesAndCalculateCost(Graph &G
 
     for (int i = 0; i < numVertices; i++)
     {
-        std::vector<MultiEdge> patternEdges = H.getEdges(i);
+        std::vector<MultiEdge> patternEdges = H.getMultiEdges(i);
 
         for (MultiEdge &edge : patternEdges)
         {
