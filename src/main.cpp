@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdint>
 
 #include "../headers/graphGenerator.h"
 #include "../headers/graph.h"
