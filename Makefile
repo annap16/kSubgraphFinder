@@ -4,8 +4,11 @@ CXXFLAGS = -std=c++17 -Wall -Iheaders
 SRC = src/main.cpp \
 	src/utils.cpp \
 	src/graph.cpp \
-    src/GraphGenerator.cpp \
-    src/inputParser.cpp
+    src/graphGenerator.cpp \
+    src/inputParser.cpp \
+	src/graphMappingIterator.cpp \
+	src/findDenseSubgraph.cpp \
+	src/approximation.cpp
 
 OUT = main
 

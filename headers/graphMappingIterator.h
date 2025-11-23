@@ -33,5 +33,5 @@ public:
     }
 
     ~GraphMappingIterator() {};
-    std::optional<std::vector<int>> next() {};
+    std::optional<std::vector<int>> next();
 };

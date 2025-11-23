@@ -1,5 +1,4 @@
-#ifndef GRAPH_GENERATOR_H
-#define GRAPH_GENERATOR_H
+#pragma once
 
 #include "graph.h"
 #include <vector>
@@ -21,5 +20,3 @@ public:
     std::optional<std::vector<int>> next();
     GraphGenerator copy();
 };
-
-#endif

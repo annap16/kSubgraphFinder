@@ -24,8 +24,8 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    Graph *G = data.G;
-    Graph *H = data.H;
+    Graph G = *data.G;
+    Graph H = *data.H;
     int numCopies = data.numCopies;
     RESULT = new Graph();
 
