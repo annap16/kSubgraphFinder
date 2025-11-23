@@ -8,7 +8,8 @@ SRC = src/main.cpp \
     src/inputParser.cpp \
 	src/graphMappingIterator.cpp \
 	src/findDenseSubgraph.cpp \
-	src/approximation.cpp
+	src/approximation.cpp \
+	src/resultWriter.cpp
 
 OUT = main
 
