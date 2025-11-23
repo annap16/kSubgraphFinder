@@ -38,7 +38,5 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // TODO: Save/Display RESULT and clean memory
-
     return 0;
 }
