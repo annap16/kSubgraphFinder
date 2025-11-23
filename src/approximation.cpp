@@ -66,6 +66,8 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
             // Penalty for having a small degree (does that make sense?)
             int degH = H.getMultiEdges(h).size();
             int degG = G.getMultiEdges(g).size();
+            int degH = H.vertexDegree(h);
+            int degG = G.vertexDegree(g);
             int lackingDeg = (degH > degG) ? (degH - degG) : 0;
 
             // Missing edges to already mapped vertices
@@ -84,7 +86,7 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
             }
 
             // We can adjust it like (-2 point for every edge missing and + is_in_dense_subraph * (number of unmatched vertices) / 3) if you want
-            double score = -static_cast<double>(lackingDeg) //?
+            double score = -static_cast<double>(lackingDeg) // weigh by the remaining unmatched vertices?
                            -static_cast<double>(missingCount)
                            + static_cast<double>(isInDenseSubgraph[g] * remainingUnmatched);
 
@@ -104,7 +106,7 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
         used[chosenG] = true;
         --remainingUnmatched;
 
-        // Add missing edges to already mapped vertices
+        // Add missing outgoing edges to already mapped vertices
         for (const MultiEdge &e : H.getMultiEdges(h))
         {
             int h2 = e.to;
@@ -117,6 +119,23 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
             if (edgesH > edgesG) {
                 missingEdges.push_back(
                         MultiEdge(chosenG, g2, edgesH - edgesG)
+                );
+            }
+        }
+        // Add missing incoming edges to already mapped vertices
+        for (int hFrom = 0; hFrom < m; ++hFrom)
+        {
+            if (hFrom == h) continue;
+
+            int gFrom = match[hFrom];
+            if (gFrom < 0) continue;
+
+            int edgesH = H.edgeCount(hFrom, h);
+            int edgesG = G.edgeCount(gFrom, chosenG);
+
+            if (edgesH > edgesG) {
+                missingEdges.push_back(
+                        MultiEdge(gFrom, chosenG, edgesH - edgesG)
                 );
             }
         }
@@ -133,23 +152,7 @@ void pickAndRemoveVertex(Graph &G, const std::vector<int> &match)
     int vertexToRemove = -1;
     for (int v : match)
     {
-        int degree = 0;
-        auto edgesOutV = G.getMultiEdges(v);
-        for (auto &e : edgesOutV)
-            degree += e.multiplicity;
-
-        for (int u : match)
-        {
-            if (u == v)
-                continue;
-            auto edgesOutU = G.getMultiEdges(u);
-            for (auto &e : edgesOutU)
-            {
-                if (e.to == v)
-                    degree += e.multiplicity;
-            }
-        }
-
+        int degree = G.vertexDegree(v);
         if (degree < minDegree)
         {
             minDegree = degree;
