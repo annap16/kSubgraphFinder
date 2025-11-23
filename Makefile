@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iheaders -g
+CXXFLAGS = -std=c++17 -Wall -Iheaders
 
 SRC = src/main.cpp \
 	src/utils.cpp \
