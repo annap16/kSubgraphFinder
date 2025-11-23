@@ -64,8 +64,6 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
             if(used[g]) continue;
 
             // Penalty for having a small degree (does that make sense?)
-            int degH = H.getMultiEdges(h).size();
-            int degG = G.getMultiEdges(g).size();
             int degH = H.vertexDegree(h);
             int degG = G.vertexDegree(g);
             int lackingDeg = (degH > degG) ? (degH - degG) : 0;
