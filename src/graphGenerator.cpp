@@ -90,3 +90,11 @@ std::optional<std::vector<int>> GraphGenerator::next()
 
     return subset;
 }
+
+GraphGenerator GraphGenerator::copy()
+{
+    GraphGenerator gg(G, k);
+    gg.finished = this->finished;
+    gg.comb = this->comb;
+    return gg;
+}

@@ -1,4 +1,4 @@
-#include "headers/graphMappingIterator.h"
+#include "../headers/graphMappingIterator.h"
 
 /**
  * Returns vector, on which i-th possition is a vertex from verties subset

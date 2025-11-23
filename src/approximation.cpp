@@ -1,4 +1,4 @@
-#include "headers/approximation.h"
+#include "../headers/approximation.h"
 
 GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopies)
 {
@@ -6,7 +6,6 @@ GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopie
         .cost = 0,
         .foundCopies = {}};
     Graph G2 = G.copy();
-    int cost = 0;
 
     for (int i = 0; i < numCopies; i++)
     {
@@ -25,7 +24,7 @@ GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopie
         }
 
         // opcjonalne pełzanie tu
-        result.foundCopies.push_back(FoundCopy(denseSubgraph, match, edges_to_add.size()));
+        result.foundCopies.push_back(FoundCopy(match, (int)edges_to_add.size()));
 
         pickAndRemoveVertex(G2, match);
     }
