@@ -2,8 +2,7 @@
 
 #include <optional>
 #include <vector>
-
-class Graph;
+#include "graph.h"
 
 // Iterator based on https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
 class GraphMappingIterator

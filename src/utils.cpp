@@ -38,7 +38,7 @@ void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int current
 
             if (currentCost < minCost)
             {
-                currentCopies.push_back(FoundCopy(*verticesSubset, *verticesMapping, addedEdgesCost));
+                currentCopies.push_back(FoundCopy(*verticesMapping, addedEdgesCost));
                 findCopy(numCopies - 1, G, H, copyGG, currentCost, minCost, result, currentCopies);
                 currentCopies.pop_back();
             }
