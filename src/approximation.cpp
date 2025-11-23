@@ -58,7 +58,7 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
 
     for(int h = 0; h < m; ++h) {
         double bestScore = -std::numeric_limits<double>::infinity();
-        std::vector<int> candidates;
+        int chosenG;
 
         for(int g = 0; g < n; ++g) {
             if(used[g]) continue;
@@ -90,14 +90,9 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
 
             if(score > bestScore) {
                 bestScore = score;
-                candidates.clear();
-                candidates.push_back(g);
-            } else if(score == bestScore) { // stalemate
-                candidates.push_back(g);
+                chosenG = g;
             }
         }
-
-        int chosenG = candidates[0];
 
         // Save the match
         match[h] = chosenG;
