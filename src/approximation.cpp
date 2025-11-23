@@ -47,9 +47,14 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
     std::vector<MultiEdge> missingEdges;
 
     std::vector<bool> used(n, false);
-
     // For quick check if a vertex is in dense subgraph
-    std::unordered_set<int> denseSet(denseSubgraph.begin(), denseSubgraph.end());
+    std::vector<bool> isInDenseSubgraph(n, false);
+    // Populate isInDenseSubgraph
+    for (int vertex : denseSubgraph) {
+        if (vertex >= 0 && vertex < n) {
+            isInDenseSubgraph[vertex] = true;
+        }
+    }
 
     for(int h = 0; h < m; ++h) {
         double bestScore = -std::numeric_limits<double>::infinity();
@@ -78,12 +83,10 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
                 }
             }
 
-            int isInDenseSubgraph = denseSet.count(g) > 0;
-
             // We can adjust it like (-2 point for every edge missing and + is_in_dense_subraph * (number of unmatched vertices) / 3) if you want
             double score = -static_cast<double>(lackingDeg) //?
                            -static_cast<double>(missingCount)
-                           + static_cast<double>(isInDenseSubgraph * remainingUnmatched);
+                           + static_cast<double>(isInDenseSubgraph[g] * remainingUnmatched);
 
             if(score > bestScore) {
                 bestScore = score;
