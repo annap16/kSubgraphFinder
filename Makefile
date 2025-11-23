@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iheaders
+CXXFLAGS = -std=c++17 -Wall -Iheaders -g
 
 SRC = src/main.cpp \
 	src/utils.cpp \
@@ -8,7 +8,8 @@ SRC = src/main.cpp \
     src/inputParser.cpp \
 	src/graphMappingIterator.cpp \
 	src/findDenseSubgraph.cpp \
-	src/approximation.cpp
+	src/approximation.cpp \
+	src/resultWriter.cpp
 
 OUT = main
 

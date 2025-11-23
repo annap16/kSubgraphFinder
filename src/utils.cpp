@@ -12,13 +12,14 @@
 #include <optional>
 #include <vector>
 
-void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int currentCost, int minCost, GraphAugmentationResult &result, std::vector<FoundCopy> currentCopies)
+void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int currentCost, int &minCost, GraphAugmentationResult &result, std::vector<FoundCopy> currentCopies)
 {
     if (numCopies == 0)
     {
         result.graphAugmentation = G.copy();
         result.cost = currentCost;
         result.foundCopies = currentCopies;
+        minCost = currentCost;
         return;
     }
 
@@ -49,7 +50,7 @@ void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int current
     }
 }
 
-std::tuple<std::vector<MultiEdge>, int> addMissingEdgesAndCalculateCost(Graph &G, Graph &H, const std::vector<int> &vertexMapping, int currentCost, int minCost)
+std::tuple<std::vector<MultiEdge>, int> addMissingEdgesAndCalculateCost(Graph &G, Graph &H, const std::vector<int> &vertexMapping, int currentCost, int &minCost)
 {
     int numVertices = H.size();
     int addedEdgesCost = 0;
