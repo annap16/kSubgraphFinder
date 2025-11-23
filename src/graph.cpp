@@ -84,3 +84,12 @@ void Graph::deleteEdges(std::vector<MultiEdge>& edges) {
         }
     }
 }
+
+void Graph::removeVertex(int v)
+{
+    adjacency.erase(v);
+    for (auto &pair : adjacency)
+    {
+        pair.second.erase(v);
+    }
+}
