@@ -24,7 +24,7 @@ GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopie
         }
 
         // opcjonalne pełzanie tu
-        result.foundCopies.push_back(FoundCopy(match, (int)edges_to_add.size()));
+        result.foundCopies.push_back(FoundCopy(match));
 
         pickAndRemoveVertex(G2, match);
     }

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iheaders
+CXXFLAGS = -std=c++17 -Wall -Iheaders -Itest
 
 # main
 SRC = src/main.cpp \
@@ -15,7 +15,8 @@ SRC = src/main.cpp \
 MAIN_OUT = main
 
 # test
-TEST_SRC = test/exact_algorithm/test_runner.cpp \
+TEST_SRC = test/test_utils/testRunner.cpp \
+		   test/testMain.cpp \
            src/utils.cpp \
            src/graph.cpp \
            src/graphGenerator.cpp \
@@ -25,7 +26,7 @@ TEST_SRC = test/exact_algorithm/test_runner.cpp \
            src/approximation.cpp \
            src/resultWriter.cpp
 
-TEST_OUT = test/exact_algorithm/test_runner
+TEST_OUT = test/testMain
 
 all: $(MAIN_OUT)
 

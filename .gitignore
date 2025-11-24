@@ -1,9 +1,13 @@
 # === Build artifacts ===
 main
+test/testMain
 *.o
 *.obj
 *.exe
 *.out
+
+# Ignore test outputs
+test/exact_algorithm/output_results/
 
 # === Build directories ===
 build/
