@@ -28,7 +28,7 @@ void run_for_directory(const std::string& program,
 
     fs::create_directories(outputDir);
 
-    for (int i = 0; i < file_num; i++) {
+    /*for (int i = 0; i < file_num; i++) {
         std::string inFile = inputDir + "/input" + std::to_string(i) + ".txt";
         std::string outFile = outputDir + "/output" + std::to_string(i) + ".txt";
 
@@ -41,7 +41,49 @@ void run_for_directory(const std::string& program,
 
         long long ms = measure_exec(cmd);
         std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
-    }
+    }*/
+   
+        std::string inFile = inputDir + "/input9" + ".txt";
+        std::string outFile = outputDir + "/output9" + ".txt";
+        std::string cmd = program + " " + inFile + " " + outFile;
+        
+        long long ms = measure_exec(cmd);
+        std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
+
+        inFile = inputDir + "/input8" + ".txt";
+         outFile = outputDir + "/output8" + ".txt";
+        cmd = program + " " + inFile + " " + outFile;
+        
+        ms = measure_exec(cmd);
+        std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
+
+        inFile = inputDir + "/input5" + ".txt";
+         outFile = outputDir + "/output5" + ".txt";
+         cmd = program + " " + inFile + " " + outFile;
+        
+         ms = measure_exec(cmd);
+        std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
+
+        inFile = inputDir + "/input4" + ".txt";
+         outFile = outputDir + "/output4" + ".txt";
+         cmd = program + " " + inFile + " " + outFile;
+        
+        ms = measure_exec(cmd);
+        std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
+
+         inFile = inputDir + "/input3" + ".txt";
+         outFile = outputDir + "/output3" + ".txt";
+         cmd = program + " " + inFile + " " + outFile;
+        
+        ms = measure_exec(cmd);
+        std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
+
+        inFile = inputDir + "/input2" + ".txt";
+         outFile = outputDir + "/output2" + ".txt";
+         cmd = program + " " + inFile + " " + outFile;
+        
+        ms = measure_exec(cmd);
+        std::cout << "[OK] " << inFile << " → " << ms << " ms\n";
 }
 
 int main() {
@@ -51,7 +93,7 @@ int main() {
     std::string program = "./main";
 #endif
 
-    run_for_directory(program, "input/graphs",      "outputs/graphs", 5);
+    //run_for_directory(program, "input/graphs",      "outputs/graphs", 5);
     run_for_directory(program, "input/multigraphs", "outputs/multigraphs", 10);
 
     return 0;
