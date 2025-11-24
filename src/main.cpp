@@ -34,7 +34,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    ParsedData data = parseInputFile(argv[1]);
+    ParsedData data = parseInputFile(argv[2]);
     if (!data.G || !data.H)
     {
         std::cerr << "Failed to load input data.\n";
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
         break;
     }
 
-    if (!ResultWriter::saveToFile(argv[2], result, numCopies))
+    if (!ResultWriter::saveToFile(argv[3], result, numCopies))
     {
         std::cerr << "[Error] Cannot save result.\n";
         return 1;
