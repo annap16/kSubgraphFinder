@@ -32,6 +32,11 @@ bool ResultWriter::saveToFile(const std::string filename,
     // Total augmentation cost
     out << result.cost << "\n";
 
+    if (result.cost == -1)
+    {
+        return true;
+    }
+
     // The augmented graph
     writeGraph(out, result.graphAugmentation);
 

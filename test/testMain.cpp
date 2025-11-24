@@ -33,6 +33,14 @@ int main()
         }
     }
 
-    std::cout << "\nTest summary: " << passed << " / " << total << " passed.\n";
+    if (passed == total)
+    {
+        std::cout << TestRunner::COLOR_GREEN << "\nTest summary: " << passed << " / " << total << " passed." << TestRunner::COLOR_RESET << "\n";
+    }
+    else
+    {
+        std::cout << TestRunner::COLOR_RED << "\nTest summary: " << passed << " / " << total << " passed." << TestRunner::COLOR_RESET << "\n";
+    }
+
     return 0;
 }
