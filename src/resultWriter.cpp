@@ -30,7 +30,7 @@ bool ResultWriter::saveToFile(const std::string filename,
     }
     if (!result.solutionFound)
     {
-        out << "-1\n";
+        out << "inf\n";
         return true;
     }
     // Total augmentation cost
