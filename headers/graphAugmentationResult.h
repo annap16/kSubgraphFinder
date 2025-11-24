@@ -5,6 +5,7 @@
 
 struct GraphAugmentationResult
 {
+    bool solutionFound;
     Graph graphAugmentation;
     int cost;
     std::vector<FoundCopy> foundCopies;

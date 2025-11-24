@@ -28,7 +28,11 @@ bool ResultWriter::saveToFile(const std::string filename,
         std::cerr << "[Error] Cannot write to file: " << filename << "\n";
         return false;
     }
-
+    if (!result.solutionFound)
+    {
+        out << "-1\n";
+        return true;
+    }
     // Total augmentation cost
     out << result.cost << "\n";
 
@@ -41,7 +45,6 @@ bool ResultWriter::saveToFile(const std::string filename,
     // All found copies
     for (const auto &copy : result.foundCopies)
     {
-        out << copy.cost << "\n";
 
         for (size_t i = 0; i < copy.mapping.size(); ++i)
         {
