@@ -6,6 +6,6 @@
 struct GraphAugmentationResult
 {
     Graph graphAugmentation;
-    int cost;
+    int cost = -1;
     std::vector<FoundCopy> foundCopies;
 };

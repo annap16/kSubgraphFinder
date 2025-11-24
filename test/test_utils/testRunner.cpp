@@ -68,12 +68,20 @@ bool TestRunner::runTest(const fs::path &inputFile,
                          const fs::path &expectedFile,
                          const fs::path &outputFile)
 {
-    std::cout << "[TEST] Running: " << inputFile.filename() << std::endl;
+    // Color constants
+    constexpr auto COLOR_RESET = "\033[0m";
+    constexpr auto COLOR_BLUE_BOLD = "\033[34;1m";
+    constexpr auto COLOR_GREEN = "\033[32m";
+    constexpr auto COLOR_RED = "\033[31m";
+
+    std::cout << COLOR_BLUE_BOLD << "[TEST]" << COLOR_RESET << " Running: "
+              << inputFile.filename() << std::endl;
 
     ParsedData data = parseInputFile(inputFile.string());
     if (!data.G || !data.H)
     {
-        std::cerr << "  [Error] Failed to load input data.\n";
+        std::cerr << "  " << COLOR_RED << "[Error]" << COLOR_RESET
+                  << " Failed to load input data.\n";
         return false;
     }
 
@@ -91,23 +99,39 @@ bool TestRunner::runTest(const fs::path &inputFile,
     std::ifstream exp(expectedFile);
     if (!exp)
     {
-        std::cerr << "  [Error] Cannot open expected result.\n";
+        std::cerr << "  " << COLOR_RED << "[Error]" << COLOR_RESET
+                  << " Cannot open expected result.\n";
         return false;
     }
 
+    std::string description;
+    std::getline(exp, description);
+    if (!description.empty())
+        std::cout << " - " << description;
+    std::cout << std::endl;
+
     int expectedCost, expectedK;
-    exp >> expectedCost >> expectedK;
+    exp >> expectedCost;
 
     if (expectedCost != result.cost)
     {
-        std::cerr << "  [FAIL] Wrong augmentation cost. Expected "
+        std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                  << " Wrong augmentation cost. Expected "
                   << expectedCost << " got " << result.cost << "\n";
         return false;
     }
+    if (expectedCost == -1)
+    {
+        std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
+        return true;
+    }
+
+    exp >> expectedK;
 
     if (expectedK != (int)result.foundCopies.size())
     {
-        std::cerr << "  [FAILED TEST SETUP] Wrong number of copies.\n";
+        std::cerr << "  " << COLOR_RED << "[FAILED TEST SETUP]" << COLOR_RESET
+                  << " Wrong number of copies.\n";
         return false;
     }
 
@@ -125,7 +149,8 @@ bool TestRunner::runTest(const fs::path &inputFile,
         if (!checkIsomorphicCopy(result.graphAugmentation, H,
                                  result.foundCopies[i].mapping))
         {
-            std::cerr << "  [FAIL] Copy " << i << " is not isomorphic to H.\n";
+            std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                      << " Copy " << i << " is not isomorphic to H.\n";
             return false;
         }
     }
@@ -137,7 +162,8 @@ bool TestRunner::runTest(const fs::path &inputFile,
 
     if (!checkDistinctCopies(maps))
     {
-        std::cerr << "  [FAIL] Copies reuse the same vertices.\n";
+        std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                  << " Copies reuse the same vertices.\n";
         return false;
     }
 
@@ -145,15 +171,18 @@ bool TestRunner::runTest(const fs::path &inputFile,
     int added = countAddedEdges(GOriginal, result.graphAugmentation);
     if (added == -1)
     {
-        std::cerr << " [FAIL] Unexpected behaviour - edge was deleted";
+        std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                  << " Unexpected behaviour - edge was deleted\n";
+        return false;
     }
     else if (added != result.cost)
     {
-        std::cerr << "  [FAIL] Added edges (" << added
+        std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                  << " Added edges (" << added
                   << ") do not match augmentation cost (" << result.cost << ").\n";
         return false;
     }
 
-    std::cout << "  [PASS]\n";
+    std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
     return true;
 }

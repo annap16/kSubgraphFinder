@@ -74,7 +74,7 @@ std::tuple<std::vector<MultiEdge>, int> addMissingEdgesAndCalculateCost(Graph &G
 
             if (currentCost + edgesToAdd >= minCost)
             {
-                return std::make_tuple(addedEdges, addedEdgesCost);
+                return std::make_tuple(addedEdges, minCost);
             }
 
             G.addEdge(mappedFrom, mappedTo, edgesToAdd);
