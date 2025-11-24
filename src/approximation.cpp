@@ -4,23 +4,32 @@
 
 GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopies)
 {
+    if (G.size() < H.size() + numCopies - 1)
+    {
+        return GraphAugmentationResult{
+            .cost = -1,
+            .foundCopies = {}};
+    }
     GraphAugmentationResult result{
         .cost = 0,
         .foundCopies = {}};
     Graph G2 = G.copy();
 
+    std::vector<bool> deleted_vertices(G.size(), false);
+
     for (int i = 0; i < numCopies; i++)
     {
         // find a subgraph of G with high degrees by removing vertices with lowest degrees
-        std::vector<int> denseSubgraph = findDenseSubgraph(G2, H.size());
+        std::vector<int> denseSubgraph = findDenseSubgraph(G2, H.size(), deleted_vertices);
 
         // greedy find a match using greedy approach and score
         // (eg. -2 point for every edge missing and + is_in_dense_subraph * (number of unmatched vertices) / 3)
-        auto [match, edges_to_add] = findMatch(G2, H, denseSubgraph);
+        auto [match, edges_to_add] = findMatch(G2, H, denseSubgraph, deleted_vertices);
 
         for (auto &e : edges_to_add)
         {
             G2.addEdge(e.from, e.to, e.multiplicity);
+            G.addEdge(e.from, e.to, e.multiplicity);
             result.cost += e.multiplicity;
         }
 
@@ -28,15 +37,15 @@ GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopie
         result.foundCopies.push_back(FoundCopy(match));
 
         // removes vertex with minimal degree in graph G to ensure that the match will stay unique
-        pickAndRemoveVertex(G2, match);
+        pickAndRemoveVertex(G2, match, deleted_vertices);
     }
 
-    result.graphAugmentation = G2;
+    result.graphAugmentation = G;
 
     return result;
 }
 
-std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &H, const std::vector<int> &denseSubgraph)
+std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &H, const std::vector<int> &denseSubgraph, const std::vector<bool> &deleted_vertices)
 {
     int n = G.size();
     int m = H.size();
@@ -66,10 +75,10 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
 
         for (int g = 0; g < n; ++g)
         {
-            if (used[g])
+            if (used[g] || deleted_vertices[g])
                 continue;
 
-            // Penalty for having a small degree (does that make sense?)
+            // Penalty for having a small degree
             int degH = H.vertexDegree(h);
             int degG = G.vertexDegree(g);
             int lackingDeg = (degH > degG) ? (degH - degG) : 0;
@@ -150,9 +159,9 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
 }
 
 // removes vertex form match vector with minimal degree in graph G to ensure that the match will stay unique
-void pickAndRemoveVertex(Graph &G, const std::vector<int> &match)
+void pickAndRemoveVertex(Graph &G, const std::vector<int> &match, std::vector<bool> &deleted_vertices)
 {
-    int minDegree = -1;
+    int minDegree = std::numeric_limits<int>::max();
     int vertexToRemove = -1;
     for (int v : match)
     {
@@ -163,6 +172,6 @@ void pickAndRemoveVertex(Graph &G, const std::vector<int> &match)
             vertexToRemove = v;
         }
     }
-
+    deleted_vertices[vertexToRemove] = true;
     G.removeVertex(vertexToRemove);
 }

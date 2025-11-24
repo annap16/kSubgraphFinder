@@ -5,13 +5,14 @@
 #include <iostream>
 #include "../headers/graph.h"
 
-std::vector<int> findDenseSubgraph(Graph &G, int m)
+std::vector<int> findDenseSubgraph(Graph &G, int m, const std::vector<bool> &deleted_vertices)
 {
     Graph H = G.copy();
 
     std::vector<int> vertices;
     for (int u = 0; u < H.size(); ++u)
-        vertices.push_back(u);
+        if (!deleted_vertices[u])
+            vertices.push_back(u);
 
     while ((int)vertices.size() > m)
     {
