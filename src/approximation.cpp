@@ -1,7 +1,6 @@
 #include "../headers/approximation.h"
 
 #include <limits>
-#include <iostream>
 
 GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopies)
 {
@@ -79,7 +78,7 @@ std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &
             if (used[g] || deleted_vertices[g])
                 continue;
 
-            // Penalty for having a small degree (does that make sense?)
+            // Penalty for having a small degree
             int degH = H.vertexDegree(h);
             int degG = G.vertexDegree(g);
             int lackingDeg = (degH > degG) ? (degH - degG) : 0;
@@ -173,7 +172,6 @@ void pickAndRemoveVertex(Graph &G, const std::vector<int> &match, std::vector<bo
             vertexToRemove = v;
         }
     }
-    std::cout << vertexToRemove << std::endl;
     deleted_vertices[vertexToRemove] = true;
     G.removeVertex(vertexToRemove);
 }
