@@ -22,4 +22,6 @@ public:
     Graph copy();
     void addIsolatedVertices(int count);
     void deleteEdges(std::vector<MultiEdge> &edges);
+    void removeVertex(int v);
+    int vertexDegree(int v) const;
 };

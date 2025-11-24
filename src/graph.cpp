@@ -90,3 +90,37 @@ void Graph::deleteEdges(std::vector<MultiEdge> &edges)
         }
     }
 }
+
+void Graph::removeVertex(int v)
+{
+    adjacency.erase(v);
+    for (auto &pair : adjacency)
+    {
+        pair.second.erase(v);
+    }
+}
+
+int Graph::vertexDegree(int v) const
+{
+    int degree = 0;
+
+    // Outgoing edges from vertex v
+    auto edgesOutV = getMultiEdges(v);
+    for (auto &e : edgesOutV)
+        degree += e.multiplicity;
+
+    // Incoming edges to vertex v
+    for (const auto &pair : adjacency)
+    {
+        int u = pair.first;
+
+        auto edgesOutU = getMultiEdges(u);
+        for (auto &e : edgesOutU)
+        {
+            if (e.to == v)
+                degree += e.multiplicity;
+        }
+    }
+
+    return degree;
+}
