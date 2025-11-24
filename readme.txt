@@ -7,7 +7,7 @@ Po uruchomieniu powstanie plik wykonywalny o nazwie main.
 Uruchamianie:
 ./main mode input_file_path output_file_path
 
-Jako tryb mozna podac 'a' w celu uruchomienia algorytmu aproksymacyjnego lub 'd' - dla algorytmu dokładnego.
+Jako tryb - mode - mozna podac 'a' w celu uruchomienia algorytmu aproksymacyjnego lub 'd' - dla algorytmu dokładnego. Ścieżki do pliku mogą być podane zarówno jako ścieżki względne i bezwzględne.
 
 Format pliku wynikowego:
 1. W pierwszej linii znajduje się informacja o koszcie - liczbie dodanych krawędzi. Jeśli rozwiązania nie znaleziono - koszt wynosi -1.
