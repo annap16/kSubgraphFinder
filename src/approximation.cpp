@@ -2,8 +2,9 @@
 
 #include <limits>
 
-GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopies)
+GraphAugmentationResult findCopiesApproximation(Graph &GOriginal, Graph &H, int numCopies)
 {
+    Graph G = GOriginal.copy();
     if (G.size() < H.size() + numCopies - 1)
     {
         return GraphAugmentationResult{

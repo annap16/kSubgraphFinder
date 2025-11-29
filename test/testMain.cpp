@@ -8,39 +8,30 @@
 
 int main()
 {
-    fs::path inputFolder = "test/exact_algorithm/input_data";
-    fs::path expectedFolder = "test/exact_algorithm/expected_results";
-    fs::path outputFolder = "test/exact_algorithm/output_results";
+    fs::path inputFolderExactAlgorithm = "test/exact_algorithm/input_data";
+    fs::path expectedFolderExactAlgorithm = "test/exact_algorithm/expected_results";
+    fs::path outputFolderExactAlgorithm = "test/exact_algorithm/output_results";
 
-    fs::create_directories(outputFolder);
+    fs::path inputFolderApproximationAlgorithm = "test/approximation_algorithm/input_data";
+    fs::path expectedFolderApproximationAlgorithm = "test/approximation_algorithm/expected_results";
+    fs::path outputFolderApproximationAlgorithm = "test/approximation_algorithm/output_results";
 
-    int total = 0;
-    int passed = 0;
+    fs::create_directories(outputFolderExactAlgorithm);
+    fs::create_directories(outputFolderApproximationAlgorithm);
 
-    for (const auto &entry : fs::directory_iterator(inputFolder))
-    {
-        if (!entry.is_regular_file())
-            continue;
+    std::cout << TestRunner::COLOR_BLUE_BOLD << "\nStarted tests for Exact Algorithm:\n"
+              << TestRunner::COLOR_RESET;
+    auto [passedExact, totalExact] = TestRunner::runAllTests(inputFolderExactAlgorithm, expectedFolderExactAlgorithm, outputFolderExactAlgorithm, false);
 
-        fs::path inputFile = entry.path();
-        fs::path outputFile = outputFolder / (inputFile.stem().string() + ".result");
-        fs::path expectedFile = expectedFolder / (inputFile.stem().string() + ".result");
+    std::cout << TestRunner::COLOR_BLUE_BOLD << "\nStarted tests for Approximation Algorithm:\n"
+              << TestRunner::COLOR_RESET;
+    auto [passedApproximation, totalApproximation] = TestRunner::runAllTests(inputFolderApproximationAlgorithm, expectedFolderApproximationAlgorithm, outputFolderApproximationAlgorithm, true);
 
-        total++;
-        if (TestRunner::runTest(inputFile, expectedFile, outputFile))
-        {
-            passed++;
-        }
-    }
+    std::cout << "\nResults for Exact Algorithm:\n";
+    TestRunner::showTotalResults(passedExact, totalExact);
 
-    if (passed == total)
-    {
-        std::cout << TestRunner::COLOR_GREEN << "\nTest summary: " << passed << " / " << total << " passed." << TestRunner::COLOR_RESET << "\n";
-    }
-    else
-    {
-        std::cout << TestRunner::COLOR_RED << "\nTest summary: " << passed << " / " << total << " passed." << TestRunner::COLOR_RESET << "\n";
-    }
+    std::cout << "\nResults for Approximation Algorithm:\n";
+    TestRunner::showTotalResults(passedApproximation, totalApproximation);
 
     return 0;
 }
