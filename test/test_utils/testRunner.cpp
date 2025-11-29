@@ -9,6 +9,7 @@
 #include "../../headers/graphAugmentationResult.h"
 #include "../../headers/inputParser.h"
 #include "../../headers/resultWriter.h"
+#include "../../headers/approximation.h"
 
 bool TestRunner::checkIsomorphicCopy(const Graph &GAugmented, const Graph &H, const std::vector<int> &map)
 {
@@ -17,7 +18,7 @@ bool TestRunner::checkIsomorphicCopy(const Graph &GAugmented, const Graph &H, co
     {
         for (int j = 0; j < hSize; j++)
         {
-            if (GAugmented.edgeCount(map[i], map[j]) != H.edgeCount(i, j))
+            if (GAugmented.edgeCount(map[i], map[j]) < H.edgeCount(i, j))
             {
                 return false;
             }
@@ -69,12 +70,6 @@ bool TestRunner::runTest(const fs::path &inputFile,
                          const fs::path &outputFile,
                          const bool isApproximation)
 {
-    // Color constants
-    constexpr auto COLOR_RESET = "\033[0m";
-    constexpr auto COLOR_BLUE_BOLD = "\033[34;1m";
-    constexpr auto COLOR_GREEN = "\033[32m";
-    constexpr auto COLOR_RED = "\033[31m";
-
     std::cout << COLOR_BLUE_BOLD << "[TEST]" << COLOR_RESET << " Running: "
               << inputFile.filename() << std::endl;
 
@@ -92,7 +87,15 @@ bool TestRunner::runTest(const fs::path &inputFile,
     GraphAugmentationResult result;
     GraphGenerator GG(GOriginal, H.size());
     int minCost = INT32_MAX;
-    findCopy(data.numCopies, GOriginal, H, GG, 0, minCost, result);
+
+    if (!isApproximation)
+    {
+        findCopy(data.numCopies, GOriginal, H, GG, 0, minCost, result);
+    }
+    else
+    {
+        result = findCopiesApproximation(GOriginal, H, data.numCopies);
+    }
 
     ResultWriter::saveToFile(outputFile.string(), result, data.numCopies);
 
@@ -135,7 +138,7 @@ bool TestRunner::runTest(const fs::path &inputFile,
 
     if (isApproximation && expectedK == -1)
     {
-        if (expectedK == (int)result.cost)
+        if (expectedK == result.cost)
         {
             std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
             return true;

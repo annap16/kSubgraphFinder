@@ -19,7 +19,12 @@ int main()
     fs::create_directories(outputFolderExactAlgorithm);
     fs::create_directories(outputFolderApproximationAlgorithm);
 
+    std::cout << TestRunner::COLOR_BLUE_BOLD << "\nStarted tests for Exact Algorithm:\n"
+              << TestRunner::COLOR_RESET;
     auto [passedExact, totalExact] = TestRunner::runAllTests(inputFolderExactAlgorithm, expectedFolderExactAlgorithm, outputFolderExactAlgorithm, false);
+
+    std::cout << TestRunner::COLOR_BLUE_BOLD << "\nStarted tests for Approximation Algorithm:\n"
+              << TestRunner::COLOR_RESET;
     auto [passedApproximation, totalApproximation] = TestRunner::runAllTests(inputFolderApproximationAlgorithm, expectedFolderApproximationAlgorithm, outputFolderApproximationAlgorithm, true);
 
     std::cout << "\nResults for Exact Algorithm:\n";
