@@ -8,6 +8,7 @@ test/testMain
 
 # Ignore test outputs
 test/exact_algorithm/output_results/
+test/approximation_algorithm/output_results/
 
 # === Build directories ===
 build/

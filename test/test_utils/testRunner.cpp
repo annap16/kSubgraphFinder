@@ -66,7 +66,8 @@ int TestRunner::countAddedEdges(const Graph &GOriginal, const Graph &GAugmented)
 
 bool TestRunner::runTest(const fs::path &inputFile,
                          const fs::path &expectedFile,
-                         const fs::path &outputFile)
+                         const fs::path &outputFile,
+                         const bool isApproximation)
 {
     // Color constants
     constexpr auto COLOR_RESET = "\033[0m";
@@ -110,23 +111,43 @@ bool TestRunner::runTest(const fs::path &inputFile,
         std::cout << " - " << description;
     std::cout << std::endl;
 
-    int expectedCost, expectedK;
-    exp >> expectedCost;
-
-    if (expectedCost != result.cost)
+    if (!isApproximation)
     {
-        std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
-                  << " Wrong augmentation cost. Expected "
-                  << expectedCost << " got " << result.cost << "\n";
-        return false;
-    }
-    if (expectedCost == -1)
-    {
-        std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
-        return true;
+        int expectedCost;
+        exp >> expectedCost;
+
+        if (expectedCost != result.cost)
+        {
+            std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                      << " Wrong augmentation cost. Expected "
+                      << expectedCost << " got " << result.cost << "\n";
+            return false;
+        }
+        if (expectedCost == -1)
+        {
+            std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
+            return true;
+        }
     }
 
+    int expectedK;
     exp >> expectedK;
+
+    if (isApproximation && expectedK == -1)
+    {
+        if (expectedK == (int)result.cost)
+        {
+            std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
+            return true;
+        }
+        else
+        {
+            std::cerr << "  " << COLOR_RED << "[FAIL]" << COLOR_RESET
+                      << "Augmentation found, but it is impossible for the given input\n";
+
+            return false;
+        }
+    }
 
     if (expectedK != (int)result.foundCopies.size())
     {
@@ -185,4 +206,43 @@ bool TestRunner::runTest(const fs::path &inputFile,
 
     std::cout << "  " << COLOR_GREEN << "[PASS]" << COLOR_RESET << "\n";
     return true;
+}
+
+std::tuple<int, int> TestRunner::runAllTests(const fs::path &inputFolder,
+                                             const fs::path &expectedFolder,
+                                             const fs::path &outputFolder,
+                                             const bool isApproximation)
+{
+    int total = 0;
+    int passed = 0;
+
+    for (const auto &entry : fs::directory_iterator(inputFolder))
+    {
+        if (!entry.is_regular_file())
+            continue;
+
+        fs::path inputFile = entry.path();
+        fs::path outputFile = outputFolder / (inputFile.stem().string() + ".result");
+        fs::path expectedFile = expectedFolder / (inputFile.stem().string() + ".result");
+
+        total++;
+        if (TestRunner::runTest(inputFile, expectedFile, outputFile, isApproximation))
+        {
+            passed++;
+        }
+    }
+
+    return std::make_tuple(passed, total);
+}
+
+void TestRunner::showTotalResults(int passed, int total)
+{
+    if (passed == total)
+    {
+        std::cout << TestRunner::COLOR_GREEN << "\tTest summary: " << passed << " / " << total << " passed." << TestRunner::COLOR_RESET << "\n";
+    }
+    else
+    {
+        std::cout << TestRunner::COLOR_RED << "\tTest summary: " << passed << " / " << total << " passed." << TestRunner::COLOR_RESET << "\n";
+    }
 }
