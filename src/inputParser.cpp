@@ -58,7 +58,7 @@ ParsedData parseInputFile(const std::string &filename)
 
     if (!(in >> data.numCopies))
     {
-        std::cerr << "[Warning] Missing numCopies value — defaulting to 1.\n";
+        //std::cerr << "[Warning] Missing numCopies value — defaulting to 1.\n";
         data.numCopies = 1;
     }
 

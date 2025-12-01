@@ -1,0 +1,13 @@
+===== DIRECTORY: input/graphs =====
+[OK] input/graphs/input1.txt → 184 ms
+[OK] input/graphs/input2.txt → 56 ms
+[OK] input/graphs/input3.txt → 119 ms
+[OK] input/graphs/input4.txt → 148 ms
+[OK] input/graphs/input5.txt → 200 ms
+[OK] input/graphs/input6.txt → 338 ms
+[OK] input/graphs/input7.txt → 475 ms
+[OK] input/graphs/input8.txt → 723 ms
+[OK] input/graphs/input9.txt → 1945 ms
+[OK] input/graphs/input10.txt → 1014 ms
+[OK] input/graphs/input11.txt → 1910 ms
+[OK] input/graphs/input12.txt → 3582 ms
