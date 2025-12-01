@@ -10,13 +10,13 @@ using namespace std;
 
 int main() {
     // Stałe parametry
-    int n1 = 10;       // pierwszy graf
-    int n2 = 3;       // drugi graf
+    int n1 = 50;       // pierwszy graf
+    int n2 = 5;       // drugi graf
     int tests = 30;    // liczba testów
     string solverPath = "C:\\src\\github\\sandrawar\\kSubgraphFinder\\main.exe";
 
     // Różne wartości k
-    vector<int> k_values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    vector<int> k_values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40};
 
     ofstream results("results_k.csv");
     results << "k,avg_time_ms\n";

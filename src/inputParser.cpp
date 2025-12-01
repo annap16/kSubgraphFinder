@@ -39,7 +39,7 @@ ParsedData parseInputFile(const std::string &filename)
     std::ifstream in(filename);
     if (!in.is_open())
     {
-        std::cerr << "[Błąd] Unable to open file: " << filename << "\n";
+        std::cerr << "[Error] Unable to open file: " << filename << "\n";
         return {nullptr, nullptr, 0};
     }
 

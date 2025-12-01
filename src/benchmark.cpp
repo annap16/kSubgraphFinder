@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 
         auto start = chrono::high_resolution_clock::now();
 
-        string cmd = solverAbs + " " + inFile + " " + outFile;
+        string cmd = solverAbs + " a " + inFile + " " + outFile;
         cout << "Running command: " << cmd << endl; 
 
         int ret = system(cmd.c_str());

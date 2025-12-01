@@ -39,7 +39,7 @@ void findCopy(int numCopies, Graph &G, Graph &H, GraphGenerator &GG, int current
 
             if (currentCost < minCost)
             {
-                currentCopies.push_back(FoundCopy(*verticesMapping, addedEdgesCost));
+                currentCopies.push_back(FoundCopy(*verticesMapping));
                 findCopy(numCopies - 1, G, H, copyGG, currentCost, minCost, result, currentCopies);
                 currentCopies.pop_back();
             }
@@ -74,7 +74,7 @@ std::tuple<std::vector<MultiEdge>, int> addMissingEdgesAndCalculateCost(Graph &G
 
             if (currentCost + edgesToAdd >= minCost)
             {
-                return std::make_tuple(addedEdges, addedEdgesCost);
+                return std::make_tuple(addedEdges, minCost);
             }
 
             G.addEdge(mappedFrom, mappedTo, edgesToAdd);

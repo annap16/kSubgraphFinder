@@ -1,35 +1,180 @@
 #include "../headers/approximation.h"
 
+#include <limits>
+
 GraphAugmentationResult findCopiesApproximation(Graph &G, Graph &H, int numCopies)
 {
-    GraphAugmentationResult result{
-        .cost = 0,
-        .foundCopies = {}};
+    if (G.size() < H.size() + numCopies - 1)
+    {
+        GraphAugmentationResult result;
+        result.cost = -1;
+        result.foundCopies = {};
+        return result;
+
+    }
+    GraphAugmentationResult result;
+    result.cost = 0;
+    result.foundCopies = {};
+
     Graph G2 = G.copy();
+
+    std::vector<bool> deleted_vertices(G.size(), false);
 
     for (int i = 0; i < numCopies; i++)
     {
-        // find a connected subgraph of G with high degrees by removing vertices with lowest
-        // degrees that are not cutting vertices
-        std::vector<int> denseSubgraph = findDenseSubgraph(G2, H.size());
+        // find a subgraph of G with high degrees by removing vertices with lowest degrees
+        std::vector<int> denseSubgraph = findDenseSubgraph(G2, H.size(), deleted_vertices);
 
         // greedy find a match using greedy approach and score
         // (eg. -2 point for every edge missing and + is_in_dense_subraph * (number of unmatched vertices) / 3)
-        auto [match, edges_to_add] = findMatch(G2, H, denseSubgraph);
+        auto [match, edges_to_add] = findMatch(G2, H, denseSubgraph, deleted_vertices);
 
         for (auto &e : edges_to_add)
         {
             G2.addEdge(e.from, e.to, e.multiplicity);
+            G.addEdge(e.from, e.to, e.multiplicity);
             result.cost += e.multiplicity;
         }
 
         // opcjonalne pełzanie tu
-        result.foundCopies.push_back(FoundCopy(match, (int)edges_to_add.size()));
+        result.foundCopies.push_back(FoundCopy(match));
 
-        pickAndRemoveVertex(G2, match);
+        // removes vertex with minimal degree in graph G to ensure that the match will stay unique
+        pickAndRemoveVertex(G2, match, deleted_vertices);
     }
 
-    result.graphAugmentation = G2;
+    result.graphAugmentation = G;
 
     return result;
+}
+
+std::tuple<std::vector<int>, std::vector<MultiEdge>> findMatch(Graph &G, Graph &H, const std::vector<int> &denseSubgraph, const std::vector<bool> &deleted_vertices)
+{
+    int n = G.size();
+    int m = H.size();
+    int remainingUnmatched = m;
+
+    // match[i] - number of a vertex from G mapped to i-th vertex from H
+    std::vector<int> match(m, -1);
+
+    std::vector<MultiEdge> missingEdges;
+
+    std::vector<bool> used(n, false);
+    // For quick check if a vertex is in dense subgraph
+    std::vector<bool> isInDenseSubgraph(n, false);
+    // Populate isInDenseSubgraph
+    for (int vertex : denseSubgraph)
+    {
+        if (vertex >= 0 && vertex < n)
+        {
+            isInDenseSubgraph[vertex] = true;
+        }
+    }
+
+    for (int h = 0; h < m; ++h)
+    {
+        double bestScore = -std::numeric_limits<double>::infinity();
+        int chosenG;
+
+        for (int g = 0; g < n; ++g)
+        {
+            if (used[g] || deleted_vertices[g])
+                continue;
+
+            // Penalty for having a small degree
+            int degH = H.vertexDegree(h);
+            int degG = G.vertexDegree(g);
+            int lackingDeg = (degH > degG) ? (degH - degG) : 0;
+
+            // Missing edges to already mapped vertices
+            int missingCount = 0;
+            for (const MultiEdge &e : H.getMultiEdges(h))
+            {
+                int h2 = e.to;
+                int g2 = match[h2];
+                if (g2 < 0)
+                    continue; // h2 is not mapped yet
+
+                int edgesH = e.multiplicity;
+                int edgesG = G.edgeCount(g, g2);
+
+                if (edgesG < edgesH)
+                {
+                    missingCount += (edgesH - edgesG);
+                }
+            }
+
+            // We can adjust it like (-2 point for every edge missing and + is_in_dense_subraph * (number of unmatched vertices) / 3) if you want
+            double score = -static_cast<double>(lackingDeg) // weigh by the remaining unmatched vertices?
+                           - static_cast<double>(missingCount) + static_cast<double>(isInDenseSubgraph[g] * remainingUnmatched);
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                chosenG = g;
+            }
+        }
+
+        // Save the match
+        match[h] = chosenG;
+        used[chosenG] = true;
+        --remainingUnmatched;
+
+        // Add missing outgoing edges to already mapped vertices
+        for (const MultiEdge &e : H.getMultiEdges(h))
+        {
+            int h2 = e.to;
+            int g2 = match[h2];
+            if (g2 < 0)
+                continue;
+
+            int edgesH = e.multiplicity;
+            int edgesG = G.edgeCount(chosenG, g2);
+
+            if (edgesH > edgesG)
+            {
+                missingEdges.push_back(
+                    MultiEdge(chosenG, g2, edgesH - edgesG));
+            }
+        }
+        // Add missing incoming edges to already mapped vertices
+        for (int hFrom = 0; hFrom < m; ++hFrom)
+        {
+            if (hFrom == h)
+                continue;
+
+            int gFrom = match[hFrom];
+            if (gFrom < 0)
+                continue;
+
+            int edgesH = H.edgeCount(hFrom, h);
+            int edgesG = G.edgeCount(gFrom, chosenG);
+
+            if (edgesH > edgesG)
+            {
+                missingEdges.push_back(
+                    MultiEdge(gFrom, chosenG, edgesH - edgesG));
+            }
+        }
+    }
+
+    return {match, missingEdges};
+}
+
+// removes vertex form match vector with minimal degree in graph G to ensure that the match will stay unique
+void pickAndRemoveVertex(Graph &G, const std::vector<int> &match, std::vector<bool> &deleted_vertices)
+{
+    int minDegree = std::numeric_limits<int>::max();
+    int vertexToRemove = -1;
+    for (int v : match)
+    {
+        int degree = G.vertexDegree(v);
+        if (degree < minDegree)
+        {
+            minDegree = degree;
+            vertexToRemove = v;
+        }
+    }
+    deleted_vertices[vertexToRemove] = true;
+    G.removeVertex(vertexToRemove);
 }
