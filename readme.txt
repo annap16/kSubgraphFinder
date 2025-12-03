@@ -33,7 +33,7 @@ g++ benchmark.cpp -o benchmark.exe
 Żeby uruchomić:
 ./benchmark n1 n2 k test_count solver_path mode(d/a)
 
-gdzie n1 oraz n2 to liczby wierzchołków grafów, k to liczba szukanych kopii, solver_path to ścieżka do skompilowanego pliku main.exe projektu, a mode to wybór algorytmu (dokładnego lub aproksymacyjnego)
+gdzie n1 oraz n2 to liczby wierzchołków grafów, k to liczba szukanych kopii, solver_path to ścieżka bezwzględna do skompilowanego pliku main.exe projektu, a mode to wybór algorytmu (dokładnego lub aproksymacyjnego)
 
 
 
