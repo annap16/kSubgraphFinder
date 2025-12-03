@@ -30,7 +30,10 @@ vector<vector<int>> generate_matrix(int n, bool multigraph=true, int max_multied
 
 void write_graph_file(const string &filename, int n1, int n2, bool multigraph, int max_multiedge, bool undirected, int k) {
     ofstream f(filename);
-    if (!f.is_open()) { cerr << "Nie mogę zapisać pliku: " << filename << endl; return; }
+    if (!f.is_open()) { 
+        cerr << "Cannot write file: " << filename << endl; 
+        return; 
+    }
 
     auto g1 = generate_matrix(n1, multigraph, max_multiedge, undirected);
     f << n1 << "\n";
@@ -50,7 +53,7 @@ void write_graph_file(const string &filename, int n1, int n2, bool multigraph, i
 
 int main(int argc, char** argv) {
     if (argc < 6) {
-        cerr << "Użycie:\n" << argv[0] << " n1 n2 k liczba_testów ścieżka_do_solvera\n";
+        cerr << "Usage:\n" << argv[0] << " n1 n2 k test_count solver_path\n";
         return 1;
     }
 
@@ -59,7 +62,7 @@ int main(int argc, char** argv) {
 
     filesystem::path solverFs(solverPath);
     if (!filesystem::exists(solverFs)) {
-        cerr << "Błąd: nie mogę znaleźć solvera pod ścieżką: " << solverFs << endl;
+        cerr << "Error: solver not found at path: " << solverFs << endl;
         return 1;
     }
 
@@ -83,7 +86,7 @@ int main(int argc, char** argv) {
         auto start = chrono::high_resolution_clock::now();
 
         string cmd = solverAbs + " d " + inFile + " " + outFile;
-        cout << "Running command: " << cmd << endl; 
+        cout << "Running command: " << cmd << endl;
 
         int ret = system(cmd.c_str());
 
@@ -91,12 +94,12 @@ int main(int argc, char** argv) {
         double ms = chrono::duration<double, milli>(end - start).count();
 
         if (ret != 0)
-            cerr << "Błąd przy uruchamianiu solvera na " << inFile << endl;
+            cerr << "Error running solver on: " << inFile << endl;
 
         cout << "Test " << i << " = " << ms << " ms\n";
         total_ms += ms;
     }
 
-    cout << "\nŚREDNI CZAS: " << (total_ms / tests) << " ms\n";
+    cout << "\nAVERAGE TIME: " << (total_ms / tests) << " ms\n";
     return 0;
 }
