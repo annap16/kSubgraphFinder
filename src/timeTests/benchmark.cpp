@@ -52,13 +52,23 @@ void write_graph_file(const string &filename, int n1, int n2, bool multigraph, i
 }
 
 int main(int argc, char** argv) {
-    if (argc < 6) {
-        cerr << "Usage:\n" << argv[0] << " n1 n2 k test_count solver_path\n";
+    if (argc < 7) {
+        cerr << "Usage:\n" << argv[0] 
+             << " n1 n2 k test_count solver_path mode(d/a)\n";
         return 1;
     }
 
-    int n1 = stoi(argv[1]), n2 = stoi(argv[2]), k = stoi(argv[3]), tests = stoi(argv[4]);
+    int n1 = stoi(argv[1]);
+    int n2 = stoi(argv[2]);
+    int k = stoi(argv[3]);
+    int tests = stoi(argv[4]);
     string solverPath = argv[5];
+    string mode = argv[6];   
+
+    if (mode != "d" && mode != "a") {
+        cerr << "Error: mode must be 'd' or 'a'\n";
+        return 1;
+    }
 
     filesystem::path solverFs(solverPath);
     if (!filesystem::exists(solverFs)) {
@@ -85,7 +95,7 @@ int main(int argc, char** argv) {
 
         auto start = chrono::high_resolution_clock::now();
 
-        string cmd = solverAbs + " d " + inFile + " " + outFile;
+        string cmd = solverAbs + " " + mode + " " + inFile + " " + outFile;
         cout << "Running command: " << cmd << endl;
 
         int ret = system(cmd.c_str());
