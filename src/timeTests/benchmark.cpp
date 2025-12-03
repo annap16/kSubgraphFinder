@@ -10,7 +10,7 @@
 
 using namespace std;
 
-vector<vector<int>> generate_matrix(int n, bool multigraph=true, int max_multiedge=3, bool undirected=false) {
+vector<vector<int>> generate_matrix(int n, bool multigraph=true, int max_multiedge=10, bool undirected=false) {
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> dist_multi(0, max_multiedge);
@@ -78,11 +78,11 @@ int main(int argc, char** argv) {
         string inFile = "inputs/test_" + to_string(i) + ".txt";
         string outFile = "outputs/out_" + to_string(i) + ".txt";
 
-        write_graph_file(inFile, n1, n2, false, 1, false, k);
+        write_graph_file(inFile, n1, n2, true, 5, false, k);
 
         auto start = chrono::high_resolution_clock::now();
 
-        string cmd = solverAbs + " a " + inFile + " " + outFile;
+        string cmd = solverAbs + " d " + inFile + " " + outFile;
         cout << "Running command: " << cmd << endl; 
 
         int ret = system(cmd.c_str());
