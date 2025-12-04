@@ -7,13 +7,16 @@ GraphAugmentationResult findCopiesApproximation(Graph &GOriginal, Graph &H, int 
     Graph G = GOriginal.copy();
     if (G.size() < H.size() + numCopies - 1)
     {
-        return GraphAugmentationResult{
-            .cost = -1,
-            .foundCopies = {}};
+        GraphAugmentationResult result;
+        result.cost = -1;
+        result.foundCopies = {};
+        return result;
+
     }
-    GraphAugmentationResult result{
-        .cost = 0,
-        .foundCopies = {}};
+    GraphAugmentationResult result;
+    result.cost = 0;
+    result.foundCopies = {};
+
     Graph G2 = G.copy();
 
     std::vector<bool> deleted_vertices(G.size(), false);
