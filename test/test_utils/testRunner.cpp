@@ -2,6 +2,9 @@
 
 #include <iostream>
 #include <set>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <cstring>
 
 #include "../../headers/graphGenerator.h"
 #include "../../headers/graph.h"
@@ -10,6 +13,26 @@
 #include "../../headers/inputParser.h"
 #include "../../headers/resultWriter.h"
 #include "../../headers/approximation.h"
+
+static std::string getFilename(const std::string &path)
+{
+    size_t pos = path.find_last_of("/\\");
+    return (pos == std::string::npos) ? path : path.substr(pos + 1);
+}
+
+static std::string getStem(const std::string &filename)
+{
+    size_t pos = filename.find_last_of('.');
+    return (pos == std::string::npos) ? filename : filename.substr(0, pos);
+}
+
+static bool isRegularFile(const std::string &path)
+{
+    struct stat statbuf;
+    if (stat(path.c_str(), &statbuf) != 0)
+        return false;
+    return S_ISREG(statbuf.st_mode);
+}
 
 bool TestRunner::checkIsomorphicCopy(const Graph &GAugmented, const Graph &H, const std::vector<int> &map)
 {
@@ -65,15 +88,15 @@ int TestRunner::countAddedEdges(const Graph &GOriginal, const Graph &GAugmented)
     return sum;
 }
 
-bool TestRunner::runTest(const fs::path &inputFile,
-                         const fs::path &expectedFile,
-                         const fs::path &outputFile,
+bool TestRunner::runTest(const std::string &inputFile,
+                         const std::string &expectedFile,
+                         const std::string &outputFile,
                          const bool isApproximation)
 {
     std::cout << COLOR_BLUE_BOLD << "[TEST]" << COLOR_RESET << " Running: "
-              << inputFile.filename() << std::endl;
+              << getFilename(inputFile) << std::endl;
 
-    ParsedData data = parseInputFile(inputFile.string());
+    ParsedData data = parseInputFile(inputFile);
     if (!data.G || !data.H)
     {
         std::cerr << "  " << COLOR_RED << "[Error]" << COLOR_RESET
@@ -97,7 +120,7 @@ bool TestRunner::runTest(const fs::path &inputFile,
         result = findCopiesApproximation(GOriginal, H, data.numCopies);
     }
 
-    ResultWriter::saveToFile(outputFile.string(), result, data.numCopies);
+    ResultWriter::saveToFile(outputFile, result, data.numCopies);
 
     // Load expected results
     std::ifstream exp(expectedFile);
@@ -211,22 +234,37 @@ bool TestRunner::runTest(const fs::path &inputFile,
     return true;
 }
 
-std::tuple<int, int> TestRunner::runAllTests(const fs::path &inputFolder,
-                                             const fs::path &expectedFolder,
-                                             const fs::path &outputFolder,
+std::tuple<int, int> TestRunner::runAllTests(const std::string &inputFolder,
+                                             const std::string &expectedFolder,
+                                             const std::string &outputFolder,
                                              const bool isApproximation)
 {
     int total = 0;
     int passed = 0;
 
-    for (const auto &entry : fs::directory_iterator(inputFolder))
+    DIR *dir = opendir(inputFolder.c_str());
+    if (!dir)
     {
-        if (!entry.is_regular_file())
+        std::cerr << COLOR_RED << "[Error]" << COLOR_RESET
+                  << " Cannot open input folder: " << inputFolder << "\n";
+        return std::make_tuple(0, 0);
+    }
+
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != nullptr)
+    {
+        // Skip . and ..
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
             continue;
 
-        fs::path inputFile = entry.path();
-        fs::path outputFile = outputFolder / (inputFile.stem().string() + ".result");
-        fs::path expectedFile = expectedFolder / (inputFile.stem().string() + ".result");
+        std::string inputFile = inputFolder + "/" + entry->d_name;
+
+        if (!isRegularFile(inputFile))
+            continue;
+
+        std::string stem = getStem(entry->d_name);
+        std::string outputFile = outputFolder + "/" + stem + ".result";
+        std::string expectedFile = expectedFolder + "/" + stem + ".result";
 
         total++;
         if (TestRunner::runTest(inputFile, expectedFile, outputFile, isApproximation))
@@ -235,6 +273,7 @@ std::tuple<int, int> TestRunner::runAllTests(const fs::path &inputFolder,
         }
     }
 
+    closedir(dir);
     return std::make_tuple(passed, total);
 }
 
