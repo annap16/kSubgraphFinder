@@ -16,8 +16,17 @@ Format pliku wynikowego:
 4. W kolejnej linii znajduje się liczba k.
 5. W kolejnych k liniach znajduje się lista mapowań - i-ta liczba w wierszu mówi o tym, na jaki wierzchołek większego grafu wejściowego zmapowany został i-ty wierzchołek grafu-wzorca.
 
-W celu przetestowania algorytmu dokładnego, przygotowaliśmy gotowe instancje testowe, oraz oczekiwane koszty rozszerzenia grafu dla tych przypadków, a także test wczytujący wszystkie dostępne inputy i sprawdzający, czy zwrócone mapowania faktycznie przekładają się na wyliczony koszt. Przykładowe inputy znajdują się w folderze test/exact_algorithm/input_data. Aby skompilować program testujący, należy wykonać komendę:
+W celu przetestowania algorytmu przygotowaliśmy gotowe instancje testowe wraz z oczekiwanymi kosztami rozszerzenia grafu. Testy wykonywane są dla dwóch wariantów algorytmu:
+Algorytm dokładny
+    1. Test wczytuje wszystkie dostępne pliki wejściowe z folderu test/exact_algorithm/input_data.
+    2. Test sprawdza, czy zwrócone mapowania wierzchołków dają minimalny koszt rozszerzenia grafu.
+    3. Dodatkowo weryfikowane jest, czy wszystkie znalezione podgrafy są izomorficzne ze wzorcem.
 
+Algorytm aproksymacyjny
+    1. Test wczytuje wszystkie pliki wejściowe z folderu test/approximation_algorithm/input_data.
+    2. Test weryfikuje czy zwrócone podgrafy są izomorficzne ze wzorcem.
+
+Aby skompilować program testujący, należy wykonać następującą komendę:
 g++ -std=c++17 -Wall -Iheaders -Itest test/test_utils/testRunner.cpp test/testMain.cpp src/utils.cpp src/graph.cpp src/graphGenerator.cpp src/inputParser.cpp src/graphMappingIterator.cpp src/findDenseSubgraph.cpp src/approximation.cpp src/resultWriter.cpp -o testMain
 
 Żeby uruchomić:
